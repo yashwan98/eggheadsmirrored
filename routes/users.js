@@ -17,8 +17,8 @@ router.post('/register', function(req, res){
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
   
-    req.checkBody('firstName', 'firstName is required').notEmpty();
-    req.checkBody('lastName', 'lastName is required').notEmpty();
+    req.checkBody('firstName', 'firstname is required').notEmpty();
+    req.checkBody('lastName', 'lastname is required').notEmpty();
     req.checkBody('email', 'Email is required').notEmpty();
     req.checkBody('email', 'Email is not valid').isEmail();
     req.checkBody('password', 'Password is required').notEmpty();
@@ -61,24 +61,22 @@ router.post('/register', function(req, res){
     }
   });
 
+  router.get('/userhome',function(req,res){
+    res.render('user_home');
+  });
+
   router.get('/login',function(req,res){
     res.render('login');
   });
 
-  router.get('/home',function(req,res){
-    res.render('home');
-  });
-  router.post('/login', function(req, res, next){
-    console.log("login");
-    passport.authenticate('local', {
-      successRedirect:'/',
-      failureRedirect:'/users/login',
-      failureFlash: true
-    },function(req, res) {
-      req.flash('success_msg','Logged in Successfully');
-      res.redirect('/users/home');
-  });(req, res, next);
-  });
+router.post('/login', function(req, res, next){
+  console.log('prem');
+  passport.authenticate('local', {
+    successRedirect:'/userhome',
+    failureRedirect:'/users/login',
+    failureFlash: true
+  })(req, res, next);
+});
   
   // logout
   router.get('/logout', function(req, res){

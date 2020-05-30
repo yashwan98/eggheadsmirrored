@@ -11,6 +11,7 @@ module.exports = function(passport){
     User.findOne(query, function(err, user){
       if(err) throw err;
       if(!user){
+        console.log("no user found");
         return done(null, false, {message: 'No user found'});
       }
 

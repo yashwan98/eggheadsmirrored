@@ -1,3 +1,4 @@
+
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -16,6 +17,12 @@
             </button>-->
             </div>
             <div class="modal-body">
+                {{#if success_msg}}
+                    <div class="alert alert-success">{{ success_msg }}</div>
+                {{/if}}
+                {{#if message}}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {{/if}}
             <form action="/users/login" method="post">
                 <div class="form-group" id="formGroup">
                 <!--<label for="exampleInputEmail1">Email address</label>-->
