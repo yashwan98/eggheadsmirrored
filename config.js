@@ -48,8 +48,8 @@ app.use(session({
     resave: true,
     saveUninitialized: true
   }));
-
-app.use(express.static(path.join(__dirname,'clients')));
+app.use('/static', express.static(path.join(__dirname, 'clients')))
+// app.use(express.static(path.join(__dirname,'clients')));
 
 // Express Messages Middleware
 app.use(require('connect-flash')());
