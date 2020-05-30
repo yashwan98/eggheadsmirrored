@@ -1,0 +1,40 @@
+{
+  "name": "egg-app",
+  "version": "1.0.0",
+  "description": "This is a educational assistance app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PREMKUMARMR/EggApp.git"
+  },
+  "author": "Prem Kumar M R",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PREMKUMARMR/EggApp/issues"
+  },
+  "homepage": "https://github.com/PREMKUMARMR/EggApp#readme",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.4",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^4.3.0",
+    "handlebars": "^4.7.6",
+    "handlebars-layouts": "^3.1.4",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.9.11",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7"
+  }
+}

@@ -1,0 +1,61 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="container">
+                <div class="row">
+                <div class="col">
+                    <a class="navbar-brand" href="#">
+                    <img src="images/EggHeads.png" width="125" height="50" class="d-inline-block align-center" alt="">
+                    </a>
+                </div>
+                </div>
+            </div>
+            <!--<h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>-->
+            </div>
+            <div class="modal-body">
+            <form action="/users/login" method="post">
+                <div class="form-group" id="formGroup">
+                <!--<label for="exampleInputEmail1">Email address</label>-->
+                <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="E-mail">
+                <small id="emailHelp" class="form-text">We'll never share your email with anyone else.</small>
+                <div class="alert alert-danger" id="alert-email-login" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                <!--<label for="exampleInputPassword1">Password</label>-->
+                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                </div>
+                <div class="container">
+                <div class="row">
+                    <div class="col text-left">
+                        <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+                    </div>
+                    </div>
+                    <div class="col text-right">
+                    <a style="color: #1a2e35;" data-toggle="modal" data-target="#ModalOTP" onclick="hideGetIn();" href="/forgotpassword">Forgot Password?</a></span>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="container">
+                <div class="row">
+                    <div class="col text-left">
+                    <button type="submit" style="background-color: #1a2e35;" class="btn btn-primary">Get In</button>
+                    </div>
+                    <div class="col text-right">
+                    <a href="/users/register" class="active" style="color: #1a2e35;"><i class="fa fa-user-plus"></i>Sign up</a>
+                    </div>
+                </div>
+                </div>
+            </form>
+            </div>
+            <!--<div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>--->
+    </div>
+</div>
