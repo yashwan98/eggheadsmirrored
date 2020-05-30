@@ -61,21 +61,45 @@ router.post('/register', function(req, res){
     }
   });
 
-  router.get('/userhome',function(req,res){
-    res.render('user_home');
-  });
+router.get('/userhome',function(req,res){
+  res.render('user_home');
+});
 
-  router.get('/login',function(req,res){
-    res.render('login');
-  });
+router.get('/login',function(req,res){
+  res.render('login');
+});
 
+/*// Login Process
 router.post('/login', function(req, res, next){
-  console.log('prem');
   passport.authenticate('local', {
     successRedirect:'/userhome',
     failureRedirect:'/users/login',
     failureFlash: true
   })(req, res, next);
+});*/
+
+router.post('/login', function(req, res, next){
+  const email = req.body.email;
+  const password = req.body.password;
+  req.checkBody('email', 'Email is required').notEmpty();
+  req.checkBody('email', 'Email is not valid').isEmail();
+  req.checkBody('password', 'Password is required').notEmpty();
+
+  let errors = req.validationErrors();
+  
+    if(errors){
+      console.log(errors);
+      res.render('login',{
+        errors:errors,
+      });
+    }
+    else{
+      passport.authenticate('local', {
+        successRedirect:'/users/userhome',
+        failureRedirect:'/users/login',
+        failureFlash: true
+      })(req, res, next);
+    }
 });
   
   // logout

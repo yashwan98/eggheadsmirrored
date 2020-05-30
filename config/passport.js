@@ -3,15 +3,20 @@ const User = require('../models/user');
 const config = require('../config/database');
 const bcrypt = require('bcryptjs');
 
+
 module.exports = function(passport){
   // Local Strategy
-  passport.use(new LocalStrategy(function(email, password, done){
+  passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  },function(username, password, done){
+    console.log(username);
+    console.log(password);
     // Match Username
-    let query = {email:email};
+    let query = {email:username};
     User.findOne(query, function(err, user){
       if(err) throw err;
       if(!user){
-        console.log("no user found");
         return done(null, false, {message: 'No user found'});
       }
 
