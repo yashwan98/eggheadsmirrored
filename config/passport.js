@@ -11,8 +11,6 @@ module.exports = function(passport){
     passwordField: 'password',
     passReqToCallback : true
   },function(req,username, password, done){
-    console.log(username);
-    console.log(password);
     // Match Username
     let query = {email:username};
     User.findOne(query, function(err, user){

@@ -109,7 +109,12 @@ app.use('/users', users);
 app.set('port', (process.env.PORT || 4000));
 
 app.get('/',(req,res,next)=>{
+  if(req.user){
+    res.redirect('/users/userhome');
+  }
+  else{
     res.render("home");
+  }
 });
 
 module.exports = { app };

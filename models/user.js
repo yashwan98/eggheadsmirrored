@@ -21,6 +21,10 @@ const UserSchema = mongoose.Schema({
   confirmPassword:{
     type: String,
     required: true
+  },
+  paid:{
+    type : Number,
+    default : 0
   }
 });
 

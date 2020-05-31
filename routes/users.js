@@ -6,18 +6,14 @@ const passport = require('passport');
 // Bring in User Model
 let User = require('../models/user');
 
-router.all('/userhome/*', ensureAuthenticated,function (req, res, next) {
-  req.app.locals.layout = 'layout_user'; // set User layout here
-  next(); // pass control to the next handler
-});
-
-router.get('/userhome/ignite',function(req,res){
-  res.render('ignite');
-});
-
 router.get('/register',function(req,res){
-  res.render('register');
-})
+  if(req.user){
+    res.redirect('/users/userhome');
+  }
+  else{
+    res.render('register');
+  }
+});
 
 router.post('/register', function(req, res){
     const firstName = req.body.firstName;
@@ -47,7 +43,6 @@ router.post('/register', function(req, res){
         email:email,
         password:password,
         confirmPassword : confirmPassword,
-        
       });
   
       bcrypt.genSalt(10, function(err, salt){
@@ -70,12 +65,13 @@ router.post('/register', function(req, res){
     }
   });
 
-router.get('/userhome',ensureAuthenticated,function(req,res){
-  res.render('user_home',{layout:'layout_user'});
-});
-
 router.get('/login',function(req,res){
-  res.render('login');
+  if(req.user){
+    res.redirect('/users/userhome');
+  }
+  else{
+    res.render('login');
+  }
 });
 
 /*// Login Process
@@ -104,20 +100,51 @@ router.post('/login', function(req, res, next){
     }
     else{
       passport.authenticate('local', {
-        successRedirect:'/users/userhome',
+        successRedirect:'/users/payment',
         failureRedirect:'/users/login',
         failureFlash: true
       })(req, res, next);
     }
 });
-  
-  // logout
-  router.get('/logout', ensureAuthenticated,function(req, res){
-    req.logout();
-    req.app.locals.layout = 'layout'; // set User layout here
-    req.flash('success_msg', 'You are logged out');
-    res.redirect('/users/login');
+
+router.get('/payment',ensureAuthenticated, function(req,res,next){
+  if(req.user.paid){
+    res.redirect('/users/userhome');
+  }
+  else{
+    res.render('payment');
+  }
+});
+
+router.get('/userhome',ensureAuthenticated,function(req,res,next){
+  if(req.user.paid){
+    res.render('user_home',{layout:'layout_user'});
+  }
+  else{
+    res.redirect('/users/payment');
+  }
+});
+
+router.all('/userhome/*', ensureAuthenticated,function (req, res, next) {
+    req.app.locals.layout = 'layout_user'; // set User layout here
+    if(!req.user.paid){
+      res.redirect('/users/payment');
+    }
+    next(); // pass control to the next handler
   });
+  
+router.get('/userhome/ignite',function(req,res){
+    res.render('ignite');
+});
+
+
+// logout
+router.get('/logout', ensureAuthenticated,function(req, res){
+  req.logout();
+  req.app.locals.layout = 'layout'; // set User layout here
+  req.flash('success_msg', 'You are logged out');
+  res.redirect('/users/login');
+});
 
   // Access Control
 function ensureAuthenticated(req, res, next){
@@ -128,4 +155,4 @@ function ensureAuthenticated(req, res, next){
     res.redirect('/users/login');
   }
 }
-  module.exports = router;
+module.exports = router;
