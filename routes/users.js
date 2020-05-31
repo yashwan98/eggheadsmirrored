@@ -6,6 +6,15 @@ const passport = require('passport');
 // Bring in User Model
 let User = require('../models/user');
 
+router.all('/userhome/*', ensureAuthenticated,function (req, res, next) {
+  req.app.locals.layout = 'layout_user'; // set User layout here
+  next(); // pass control to the next handler
+});
+
+router.get('/userhome/ignite',function(req,res){
+  res.render('ignite');
+});
+
 router.get('/register',function(req,res){
   res.render('register');
 })
@@ -61,8 +70,8 @@ router.post('/register', function(req, res){
     }
   });
 
-router.get('/userhome',function(req,res){
-  res.render('user_home');
+router.get('/userhome',ensureAuthenticated,function(req,res){
+  res.render('user_home',{layout:'layout_user'});
 });
 
 router.get('/login',function(req,res){
@@ -103,10 +112,19 @@ router.post('/login', function(req, res, next){
 });
   
   // logout
-  router.get('/logout', function(req, res){
+  router.get('/logout', ensureAuthenticated,function(req, res){
     req.logout();
     req.flash('success_msg', 'You are logged out');
     res.redirect('/users/login');
   });
 
+  // Access Control
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('error_msg', 'Please login');
+    res.redirect('/users/login');
+  }
+}
   module.exports = router;
