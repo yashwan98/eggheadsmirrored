@@ -114,6 +114,7 @@ router.post('/login', function(req, res, next){
   // logout
   router.get('/logout', ensureAuthenticated,function(req, res){
     req.logout();
+    req.app.locals.layout = 'layout'; // set User layout here
     req.flash('success_msg', 'You are logged out');
     res.redirect('/users/login');
   });
