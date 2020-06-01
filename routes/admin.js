@@ -13,9 +13,9 @@ router.get('/login', function (req, res) {
 router.post('/login', function (req, res) {
     const email = req.body.adminEmail;
     const password = req.body.adminPassword;
-    req.checkBody('email', 'Email is required').notEmpty();
-    req.checkBody('email', 'Email is not valid').isEmail();
-    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('req.body.adminEmail', 'Email is required').notEmpty();
+    req.checkBody('req.body.adminEmail', 'Email is not valid').isEmail();
+    req.checkBody('req.body.adminPassword', 'Password is required').notEmpty();
 
     let errors = req.validationErrors();
 
