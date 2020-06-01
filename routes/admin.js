@@ -5,10 +5,8 @@ const passport = require('passport');
 var mongoose = require('mongoose');
 const config = require('../config/database');
 
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/eggheads";
-
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
+let db = mongoose.connection;
 
 router.get('/login', function (req, res) {
     res.render('admin_login');
@@ -32,15 +30,12 @@ router.post('/login', function (req, res) {
     else {
         if (adminEmail === 'EggHeads_@outlook.com' && adminPassword === 'breaksomeeggs'){
             req.flash('success_msg', 'You are Authorized');
-
-            MongoClient.connect(url, function (err, db) {
+        
+            var dbo = db.db("eggheads");
+            dbo.collection("users").find({}).toArray(function (err, result) {
                 if (err) throw err;
-                var dbo = db.db("eggheads");
-                dbo.collection("users").find({}).toArray(function (err, result) {
-                    if (err) throw err;
-                    console.log(result);
-                    db.close();
-                });
+                console.log(result);
+                db.close();
             });
             res.render('user_data')
         }
