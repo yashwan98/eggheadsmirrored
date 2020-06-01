@@ -106,6 +106,9 @@ const users = require('./routes/users');
 
 app.use('/users', users);
 
+const admin = require('./routes/admin');
+app.use('/admin', admin);
+
 app.set('port', (process.env.PORT || 4000));
 
 app.get('/',(req,res,next)=>{
