@@ -10,15 +10,6 @@ router.get('/admin/login', function (req, res) {
     res.render('admin_login');
 });
 
-router.get('/login', function (req, res) {
-    if (req.user) {
-        res.redirect('/users/userhome');
-    }
-    else {
-        res.render('login');
-    }
-});
-
 router.post('/admin/login', function (req, res, next) {
     const email = req.body.adminEmail;
     const password = req.body.adminPassword;
