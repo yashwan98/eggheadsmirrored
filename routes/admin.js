@@ -3,14 +3,14 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
-// Bring in Admin Model
-let adminModel = require('../models/admin_model');
+// Bring in User Model
+let User = require('../models/user');
 
 router.get('/login', function (req, res) {
     res.render('admin_login');
 });
 
-router.post('/login', function (req, res, next) {
+router.post('/login', function (req, res) {
     const email = req.body.adminEmail;
     const password = req.body.adminPassword;
     req.checkBody('email', 'Email is required').notEmpty();
@@ -26,7 +26,16 @@ router.post('/login', function (req, res, next) {
         });
     }
     else {
-        res.render('user_data')
+        if (email === 'EggHeads_@outlook.com' && password === 'breaksomeeggs'){
+            req.flash('success_msg', 'You are Authorized');
+            console.log(User.find({}));
+            res.render('user_data')
+        }
+        else{
+            req.flash('error_msg', 'You are not an Administrator');
+            res.redirect('/admin/login');
+        }
+       
     }
 });
 
