@@ -5,6 +5,8 @@ const passport = require('passport');
 var mongoose = require('mongoose');
 const config = require('../config/database');
 
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/eggheads";
 
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -30,20 +32,14 @@ router.post('/login', function (req, res) {
     else {
         if (adminEmail === 'EggHeads_@outlook.com' && adminPassword === 'breaksomeeggs'){
             req.flash('success_msg', 'You are Authorized');
-            // Wait until connection is established
-            mongoose.connection.on('open', function (err, doc) {
-                console.log("connection established");
 
-                mongoose.connection.eggheads.collection('users', function (err, docs) {
-                    // Check for error
-                    if (err) return console.log(err);
-                    // Walk through the cursor
-                    docs.find().each(function (err, doc) {
-                        // Check for error
-                        if (err) return console.err(err);
-                        // Log document
-                        console.log(doc);
-                    })
+            MongoClient.connect(url, function (err, db) {
+                if (err) throw err;
+                var dbo = db.db("eggheads");
+                dbo.collection("users").find({}).toArray(function (err, result) {
+                    if (err) throw err;
+                    console.log(result);
+                    db.close();
                 });
             });
             res.render('user_data')
@@ -57,22 +53,3 @@ router.post('/login', function (req, res) {
 });
 
 module.exports = router;
-
-
-
-// Wait until connection is established
-mongoose.connection.on('open', function (err, doc) {
-    console.log("connection established");
-
-    mongoose.connection.db.collection('ftse100', function (err, docs) {
-        // Check for error
-        if (err) return console.log(err);
-        // Walk through the cursor
-        docs.find().each(function (err, doc) {
-            // Check for error
-            if (err) return console.err(err);
-            // Log document
-            console.log(doc);
-        })
-    });
-});
