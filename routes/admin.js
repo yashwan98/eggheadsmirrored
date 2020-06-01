@@ -31,13 +31,14 @@ router.post('/login', function (req, res) {
         if (adminEmail === 'EggHeads_@outlook.com' && adminPassword === 'breaksomeeggs'){
             req.flash('success_msg', 'You are Authorized');
         
-            var dbo = db.db("eggheads");
+            var dbo = db.useDb("eggheads");
             dbo.collection("users").find({}).toArray(function (err, result) {
                 if (err) throw err;
-                console.log(result);
+                res.render('user_data', {
+                    result: result
+                });
                 db.close();
             });
-            res.render('user_data')
         }
         else{
             req.flash('error_msg', 'You are not an Administrator');
