@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 var mongoose = require('mongoose');
-const config = require('./config/database');
+const config = require('../config/database');
 
 
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -34,7 +34,7 @@ router.post('/login', function (req, res) {
             mongoose.connection.on('open', function (err, doc) {
                 console.log("connection established");
 
-                mongoose.connection.db.collection('users', function (err, docs) {
+                mongoose.connection.db.collection('eggheads', function (err, docs) {
                     // Check for error
                     if (err) return console.log(err);
                     // Walk through the cursor
