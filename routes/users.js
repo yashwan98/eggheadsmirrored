@@ -21,12 +21,15 @@ router.post('/register', function(req, res){
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
+    const course = req.body.course;
+    console.log(course);
   
     req.checkBody('firstName', 'firstname is required').notEmpty();
     req.checkBody('lastName', 'lastname is required').notEmpty();
     req.checkBody('email', 'Email is required').notEmpty();
     req.checkBody('email', 'Email is not valid').isEmail();
     req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('course', 'select course').isIn(['ignite','kindle']);
     req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
   
     let errors = req.validationErrors();
@@ -42,7 +45,7 @@ router.post('/register', function(req, res){
         lastName : lastName,
         email:email,
         password:password,
-        confirmPassword : confirmPassword,
+        course:course,
       });
   
       bcrypt.genSalt(10, function(err, salt){
@@ -118,7 +121,7 @@ router.get('/payment',ensureAuthenticated, function(req,res,next){
 
 router.get('/userhome',ensureAuthenticated,function(req,res,next){
   if(req.user.paid){
-    res.render('user_home',{layout:'layout_user'});
+    res.render('user_home',{layout:'layout_user',course:req.user.course});
   }
   else{
     res.redirect('/users/payment');
@@ -128,15 +131,24 @@ router.get('/userhome',ensureAuthenticated,function(req,res,next){
 router.all('/userhome/*', ensureAuthenticated,function (req, res, next) {
     req.app.locals.layout = 'layout_user'; // set User layout here
     if(!req.user.paid){
+      req.app.locals.layout = 'layout'; // set User layout here
       res.redirect('/users/payment');
     }
-    next(); // pass control to the next handler
+    else{
+      next(); // pass control to the next handler
+    }
+    
   });
-  
+
+//ignite routes starts here.
 router.get('/userhome/ignite',function(req,res){
     res.render('ignite');
 });
 
+//kindle routes starts here.
+router.get('/userhome/kindle',function(req,res){
+  res.render('kindle');
+});
 
 // logout
 router.get('/logout', ensureAuthenticated,function(req, res){

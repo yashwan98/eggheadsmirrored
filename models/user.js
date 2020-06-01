@@ -18,9 +18,9 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  confirmPassword:{
+  course:{
     type: String,
-    required: true
+    default : 'course'
   },
   paid:{
     type : Number,
