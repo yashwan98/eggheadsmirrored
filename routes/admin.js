@@ -34,7 +34,7 @@ router.post('/login', function (req, res) {
             mongoose.connection.on('open', function (err, doc) {
                 console.log("connection established");
 
-                mongoose.connection.db.collection('eggheads', function (err, docs) {
+                mongoose.connection.eggheads.collection('users', function (err, docs) {
                     // Check for error
                     if (err) return console.log(err);
                     // Walk through the cursor
