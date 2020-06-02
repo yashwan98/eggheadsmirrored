@@ -35,8 +35,9 @@ router.post('/login', function (req, res) {
             dbo.collection("users").find({}).toArray(function (err, result) {
                 if (err) throw err;
                 res.render('user_data', {
-                    result: result
+                    results: result,
                 });
+                //console.log(result);
                 db.close();
             });
         }
