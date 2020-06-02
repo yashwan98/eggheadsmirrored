@@ -5,6 +5,7 @@ const passport = require('passport');
 
 // Bring in User Model
 let User = require('../models/user');
+let counters = require('../models/counter');
 
 router.get('/register',function(req,res){
   if(req.user){
@@ -41,6 +42,7 @@ router.post('/register', function(req, res){
       });
     } else {
       let newUser = new User({
+        serialNumber: getNextSequenceValue("users"),
         firstName:firstName,
         lastName : lastName,
         email:email,
@@ -166,5 +168,14 @@ function ensureAuthenticated(req, res, next){
     req.flash('error_msg', 'Please login');
     res.redirect('/users/login');
   }
+}
+
+function getNextSequenceValue(sequenceName) {
+  var sequenceDocument = db.counters.findAndModify({
+    query: { serialNumber: sequenceName },
+    update: { $inc: { sequence_value: 1 } },
+    new: true
+  });
+  return sequenceDocument.sequence_value;
 }
 module.exports = router;

@@ -30,7 +30,6 @@ router.post('/login', function (req, res) {
     else {
         if (adminEmail === 'EggHeads_@outlook.com' && adminPassword === 'breaksomeeggs'){
             req.flash('success_msg', 'You are Authorized');
-        
             var dbo = db.useDb("eggheads");
             dbo.collection("users").find({}).toArray(function (err, result) {
                 if (err) throw err;

@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // User Schema
 const UserSchema = mongoose.Schema({
+  serialNumber:{
+    type: Number,
+    required: true
+  },
   firstName:{
     type: String,
     required: true
