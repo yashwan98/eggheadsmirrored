@@ -42,7 +42,6 @@ router.post('/register', function(req, res){
       });
     } else {
       let newUser = new User({
-        serialNumber: getNextSequenceValue("users"),
         firstName:firstName,
         lastName : lastName,
         email:email,
@@ -170,12 +169,4 @@ function ensureAuthenticated(req, res, next){
   }
 }
 
-function getNextSequenceValue(sequenceName) {
-  var sequenceDocument = db.counters.findAndModify({
-    query: { serialNumber: sequenceName },
-    update: { $inc: { sequence_value: 1 } },
-    new: true
-  });
-  return sequenceDocument.sequence_value;
-}
 module.exports = router;
