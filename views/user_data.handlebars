@@ -17,17 +17,17 @@
                 <td>{{firstName}}</td>
                 <td>{{lastName}}</td>
                 <td>{{email}}</td>
-                {{#ifEquals course "ignite"}}
+                <td>
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                            <td>{{course}}</td>
+                            {{course}}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="#">kindle</a>
                         </div>
                     </div>
-                {{/if}}
+                </td>
                 {{#if paid }}
                     <td>
                         <svg class="bi bi-check-circle" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor"
