@@ -22,7 +22,22 @@
               </nav>
                 <nav aria-label="Page navigation example" id="day-nav">
                   <ul class="pagination justify-content-center">
-                    {{#if day }}
+                    {{#times daycount}}
+                      {{#iff ../day '>=' (math this "+" 1)}}
+                        <li class="page-item">
+                          <a class="page-link" href="/users/userhome/ignite/week{{ ../week }}/day{{ math this "+" 1 }}" id="Week-1" onclick="tabPreview('Week',1);">Day {{ math this "+" 1 }}</a>
+                        </li>
+                      {{else}}
+                        <li class="page-item disabled" id="Week-3"><a class="page-link" href="/users/userhome/ignite/week{{ ../week }}/day{{ math this "+" 1 }}" aria-disabled="true" onclick="tabPreview('Week',3);">Day {{ math this "+" 1 }}</a></li>
+                      {{/iff }}
+                    <!--<li class="page-item disabled" id="Week-2"><a class="page-link" href="/users/userhome/ignite/week2" aria-disabled="true" onclick="tabPreview('Week',2);">Week 2</a></li>
+                    <li class="page-item disabled" id="Week-3"><a class="page-link" href="/users/userhome/ignite/week3" aria-disabled="true" onclick="tabPreview('Week',3);">Week 3</a></li>
+                    <li class="page-item disabled" id="Week-4"><a class="page-link" href="/users/userhome/ignite/week4" aria-disabled="true"  onclick="tabPreview('Week',4);">Week 4</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                    </li>-->
+                    {{/times}}
+                    <!--{{#if day }}
                       <ul class="pagination justify-content-center">
                       <li class="page-item">
                         <a class="page-link" href="/users/userhome/ignite/week{{ week }}/day{{ day }}" onclick="tabPreview('day',1);">Day 1</a>
@@ -31,26 +46,37 @@
                       <li class="page-item disabled" id="day-3"><a class="page-link" href="flexbox-page.php?day=3" onclick="tabPreview('day',3);">Day 3</a></li>
                       <li class="page-item disabled" id="day-4"><a class="page-link" href="#" onclick="tabPreview('day',4);">Day 4</a></li>
                       <li class="page-item disabled" id="day-5"><a class="page-link" href="#" onclick="tabPreview('day',5);">Day 5</a></li>
+                    {{/if}}-->
                     </ul>
-                    {{/if}}
                   </nav>
                   </div>
-            {{#if user }}
               <div class="container">
                 {{#each user}}
-                  {{#each this}}
-                  <div class="row h-auto border 5px">
-                  <div class="col-md-9 justify-content-center"><b>Title</b></div>
-                  <div class="col-md-9 justify-content-center" id="title"> {{ title }}</div>
-                
-                  <div class="col-md-2 justify-content-center">
-                    <a class="btn btn-primary" href="/users/userhome/ignite/week{{ ../week }}/day{{ ../day }}/video{{ id }}" role="button">View</a>
-                  </div>
-                  </div>
-                  {{/each}}
+                  {{#iff this.id '<=' ../title_id}}
+                    
+                    <div class="row h-auto border 5px">
+
+                    <div class="col-md-9 justify-content-center"><b>Title</b></div>
+                    <div class="col-md-9 justify-content-center" id="title"> {{ this.title }}</div>
+                  
+                    <div class="col-md-2 justify-content-center">
+                      <a class="btn btn-primary" href="/users/userhome/ignite/week{{ ../url_week }}/day{{ ../url_day }}/video{{ this.id }}" role="button">View</a>
+                    </div>
+                    </div>
+                  {{else}}
+                    <div class="row h-auto border 5px">
+
+                    <div class="col-md-9 justify-content-center"><b>Title</b></div>
+                    <div class="col-md-9 justify-content-center" id="title"> {{ this.title }}</div>
+                  
+                    <div class="col-md-2 justify-content-center">
+                      <a class="btn btn-primary disabled" href="/users/userhome/ignite/week{{ ../url_week }}/day{{ ../url_day }}/video{{ this.id }}" role="button">View</a>
+                    </div>
+                    </div>
+                {{/iff}}
                 {{/each}}
               </div>
-            {{/if}}
+            
               <!--<div class="table-responsive">
                 <table class="table table-bordered">
                   <thead>
