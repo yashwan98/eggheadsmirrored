@@ -15,9 +15,13 @@ router.get('/login', function (req, res) {
 router.get('/k', function (req, res) {
     console.log("\k")
     var dbo = db.useDb("eggheads");
-    db.collection("users").update(
-        { "course": "Kindle" }
-    );
+    var myquery = { course: "ignite" };
+    var newvalues = { $set: { course: "kindle"} };
+    dbo.collection("users").updateOne(myquery, newvalues, function (err, res) {
+        if (err) throw err;
+        console.log("1 document updated");
+        db.close();
+    });
 });
 
 router.post('/login', function (req, res) {
