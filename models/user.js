@@ -1,12 +1,4 @@
-var mongoose = require("mongoose"),
-  Schema = mongoose.Schema,
-  autoIncrement = require("mongoose-auto-increment");
-
-var connection = mongoose.createConnection(
-  "mongodb://localhost:27017/eggheads"
-);
-
-autoIncrement.initialize(connection);
+var mongoose = require("mongoose");
 
 // User Schema
 const UserSchema = mongoose.Schema({
@@ -36,7 +28,6 @@ const UserSchema = mongoose.Schema({
   }
 });
 
-UserSchema.plugin(autoIncrement.plugin, "User");
 const User = module.exports = mongoose.model('User', UserSchema);
 
 
