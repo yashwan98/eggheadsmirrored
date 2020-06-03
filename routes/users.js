@@ -181,7 +181,7 @@ function ensureAuthenticated(req, res, next){
 function getValueForNextSequence(sequenceOfName){
    var dbo = db.useDb("eggheads");
    var sequenceDoc = dbo.collection('counter').findAndModify({
-    query:{user_id: sequenceOfName },
+    query:{_id: sequenceOfName },
     update: {$inc:{sequence_value:1}},
     new:true
   });
