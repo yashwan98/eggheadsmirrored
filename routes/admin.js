@@ -13,14 +13,15 @@ router.get('/login', function (req, res) {
 });
 
 router.post('/course_change', function (req, res) {
-    console.log(req.body)
-    var dbo = db.useDb("eggheads");
+    console.log("post request of course_change")
+    console.log(req.body.courseChange)
+    /* var dbo = db.useDb("eggheads");
     var myquery = { course: "ignite" };
     var newvalues = { $set: { course: "kindle"} };
     dbo.collection("users").updateOne(myquery, newvalues, function (err, res) {
         if (err) throw err;
         console.log("1 document updated");
-    });
+    }); */
 });
 
 router.post('/login', function (req, res) {
