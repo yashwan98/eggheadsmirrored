@@ -16,12 +16,12 @@ router.get('/k', function (req, res) {
     var dbo = db.useDb("eggheads");
     dbo.collection("users").find({}).toArray(function (err, result) {
         if (err) throw err;
-        result.course = "Kindle";
-        res.render('user_data', {
-            results: result,
-        });
+        result.course = "kindle";
         //console.log(result);
         db.close();
+    });
+    res.render('user_data', {
+        results: result,
     });
 });
 
