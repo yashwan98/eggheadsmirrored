@@ -3,6 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const mongoose = require("mongoose");
+const config = require("../config/database");
+
 // Bring in User Model
 let User = require('../models/user');
 mongoose.connect(config.database, {
