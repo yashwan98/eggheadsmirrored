@@ -17,6 +17,7 @@ router.get('/k', function (req, res) {
     dbo.collection("users").find({}).toArray(function (err, result) {
         if (err) throw err;
         result.course = "kindle";
+        users.save();
         //console.log(result);
         db.close();
     });
