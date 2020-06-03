@@ -14,7 +14,7 @@ dbo.createCollection("counter", function (err, res) {
 
 //insert a document
 var myobj = {
-    _id: "item_id", 
+    id: "item_id", 
     sequence_value: 0
  };
 dbo.collection("counter").insertOne(myobj, function (err, res) {

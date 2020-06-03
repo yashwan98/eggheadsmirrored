@@ -2,16 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const mongoose = require("mongoose");
-const config = require("../config/database");
 
 // Bring in User Model
 let User = require('../models/user');
-mongoose.connect(config.database, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-let db = mongoose.connection;
 
 let counter = require('../models/counter');
 
@@ -50,7 +43,6 @@ router.post('/register', function(req, res){
       });
     } else {
       let newUser = new User({
-        user_id: getValueForNextSequence("item_id"),
         firstName:firstName,
         lastName : lastName,
         email:email,
@@ -177,16 +169,5 @@ function ensureAuthenticated(req, res, next){
     res.redirect('/users/login');
   }
 }
-
-function getValueForNextSequence(sequenceOfName){
-   var dbo = db.useDb("eggheads");
-   var sequenceDoc = dbo.collection('counter').findAndModify({
-    query:{_id: sequenceOfName },
-    update: {$inc:{sequence_value:1}},
-    new:true
-  });
-
-     return sequenceDoc.sequence_value;
- }
 
 module.exports = router;

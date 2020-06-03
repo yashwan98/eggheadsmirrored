@@ -1,11 +1,15 @@
-const mongoose = require('mongoose');
+var mongoose = require("mongoose"),
+  Schema = mongoose.Schema,
+  autoIncrement = require("mongoose-auto-increment");
+
+var connection = mongoose.createConnection(
+  "mongodb://localhost:27017/eggheads"
+);
+
+autoIncrement.initialize(connection);
 
 // User Schema
 const UserSchema = mongoose.Schema({
-  user_id:{
-    type: Number,
-    required: true
-  },
   firstName:{
     type: String,
     required: true
@@ -16,7 +20,7 @@ const UserSchema = mongoose.Schema({
   },
   email:{
     type: String,
-    unique: true
+    required: true
   },
   password:{
     type: String,
@@ -32,4 +36,7 @@ const UserSchema = mongoose.Schema({
   }
 });
 
+UserSchema.plugin(autoIncrement.plugin, "User");
 const User = module.exports = mongoose.model('User', UserSchema);
+
+
