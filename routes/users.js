@@ -5,7 +5,8 @@ const passport = require('passport');
 
 // Bring in User Model
 let User = require('../models/user');
-let counters = require('../models/counter');
+
+let counter = require('../models/counter');
 
 router.get('/register',function(req,res){
   if(req.user){

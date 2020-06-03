@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+var autoIncrement = require('mongoose-auto-increment');
 // User Schema
 const UserSchema = mongoose.Schema({
   firstName:{
@@ -12,7 +12,7 @@ const UserSchema = mongoose.Schema({
   },
   email:{
     type: String,
-    required: true
+    unique: true
   },
   password:{
     type: String,
@@ -27,5 +27,6 @@ const UserSchema = mongoose.Schema({
     default : 0
   }
 });
-
+autoIncrement.initialize(mongoose.connection);
+userSchema.plugin(autoIncrement.plugin, 'User');
 const User = module.exports = mongoose.model('User', UserSchema);
