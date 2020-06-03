@@ -12,6 +12,19 @@ router.get('/login', function (req, res) {
     res.render('admin_login');
 });
 
+router.get('/k', function (req, res) {
+    var dbo = db.useDb("eggheads");
+    dbo.collection("users").find({}).toArray(function (err, result) {
+        if (err) throw err;
+        result.course = "Kindle";
+        res.render('user_data', {
+            results: result,
+        });
+        //console.log(result);
+        db.close();
+    });
+});
+
 router.post('/login', function (req, res) {
     const adminEmail = req.body.adminEmail;
     const adminPassword = req.body.adminPassword;
