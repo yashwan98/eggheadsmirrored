@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-
+const mongoose = require("mongoose");
 // Bring in User Model
 let User = require('../models/user');
 mongoose.connect(config.database, {
