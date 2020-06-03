@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const exphbs = require('express-handlebars');
+const Handlebars = require('handlebars');
 const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
@@ -70,6 +71,7 @@ app.get('*', function(req,res,next){
   res.locals.success = req.flash('success');
   res.locals.danger = req.flash('danger');
   res.locals.warning = req.flash('warning');
+  res.locals.user_status = 0;
   next();
 });
 
@@ -101,6 +103,46 @@ app.use(expressValidator({
   app.use(passport.initialize());
   app.use(passport.session());
 
+  Handlebars.registerHelper('times', function(n, block) {
+    var accum = '';
+    for(var i = 0; i < n; ++i)
+        accum += block.fn(i);
+    return accum;
+});
+  Handlebars.registerHelper('iff', function(a, operator, b, opts) {
+    var bool = false;
+    switch(operator) {
+      case '==':
+          bool = a == b;
+          break;
+      case '>':
+          bool = a > b;
+          break;
+      case '<':
+          bool = a < b;
+          break;
+      default:
+          throw "Unknown operator " + operator;
+    }
+
+    if (bool) {
+        return opts.fn(this);
+    } else {
+        return opts.inverse(this);
+    }
+  });
+  Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
+    lvalue = parseFloat(lvalue);
+    rvalue = parseFloat(rvalue);
+        
+    return {
+        "+": lvalue + rvalue,
+        "-": lvalue - rvalue,
+        "*": lvalue * rvalue,
+        "/": lvalue / rvalue,
+        "%": lvalue % rvalue
+    }[operator];
+});
   
 const users = require('./routes/users');
 
