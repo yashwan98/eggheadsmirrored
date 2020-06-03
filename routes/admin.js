@@ -13,17 +13,11 @@ router.get('/login', function (req, res) {
 });
 
 router.get('/k', function (req, res) {
+    console.log("\k")
     var dbo = db.useDb("eggheads");
-    dbo.collection("users").find({}).toArray(function (err, result) {
-        if (err) throw err;
-        result.course = "kindle";
-        users.save();
-        //console.log(result);
-        db.close();
-    });
-    res.render('user_data', {
-        results: result,
-    });
+    db.collection("users").update(
+        { "course": "Kindle" }
+    );
 });
 
 router.post('/login', function (req, res) {
@@ -50,7 +44,7 @@ router.post('/login', function (req, res) {
                 res.render('user_data', {
                     results: result,
                 });
-                //console.log(result);
+                console.log(result);
                 db.close();
             });
         }
