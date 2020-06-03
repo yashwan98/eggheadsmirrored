@@ -7,12 +7,14 @@
             <th scope="col">Email Id</th>
             <th scope="col">Course</th>
             <th scope="col">Paid</th>
+            <th scope="col">Change in DB</th>
         </tr>
     </thead>
     <tbody>
         {{#if results}}
             {{#each results }}
             <tr>
+                <form action="/admin/course_change" method="post"></form>
                 <th scope="row">1</th>
                 <td>{{firstName}}</td>
                 <td>{{lastName}}</td>
@@ -24,7 +26,9 @@
                             {{course}}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="/admin/k" >kindle</a>
+                            <select name="courseChange">
+                                <option class="dropdown-item" value="kindle">Kindle</option>
+                            </select>
                         </div>
                     </div>
                 </td>
@@ -46,6 +50,12 @@
                         </svg>
                     </td>
                 {{/if}}
+                <td>
+                    <div class="col text-left">
+                        <button type="submit" style="background-color: #1a2e35;" class="btn btn-primary">COMMIT</button>
+                    </div>
+                </td>
+                </form>
             </tr>
             {{/each }}
         {{/if}}        

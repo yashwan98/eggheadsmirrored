@@ -12,15 +12,14 @@ router.get('/login', function (req, res) {
     res.render('admin_login');
 });
 
-router.get('/k', function (req, res) {
-    console.log("\k")
+router.post('/course_change', function (req, res) {
+    console.log(req.body)
     var dbo = db.useDb("eggheads");
     var myquery = { course: "ignite" };
     var newvalues = { $set: { course: "kindle"} };
     dbo.collection("users").updateOne(myquery, newvalues, function (err, res) {
         if (err) throw err;
         console.log("1 document updated");
-        db.close();
     });
 });
 
@@ -49,7 +48,6 @@ router.post('/login', function (req, res) {
                     results: result,
                 });
                 console.log(result);
-                db.close();
             });
         }
         else{
