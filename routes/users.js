@@ -43,6 +43,7 @@ router.post('/register', function(req, res){
       });
     } else {
       let newUser = new User({
+        user_id: getValueForNextSequence("item_id"),
         firstName:firstName,
         lastName : lastName,
         email:email,
@@ -169,5 +170,16 @@ function ensureAuthenticated(req, res, next){
     res.redirect('/users/login');
   }
 }
+
+function getValueForNextSequence(sequenceOfName){
+   var dbo = db.useDb("eggheads");
+   var sequenceDoc = dbo.counter.findAndModify({
+    query:{user_id: sequenceOfName },
+    update: {$inc:{sequence_value:1}},
+    new:true
+  });
+
+     return sequenceDoc.sequence_value;
+ }
 
 module.exports = router;
