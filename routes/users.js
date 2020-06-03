@@ -9,7 +9,7 @@ let UserStatus = require('../models/userStatus');
 let ignite = require('../models/ignite');
 
 
-router.all('/userhome/*', ensureAuthenticated,function (req, res, next) {
+router.all('/userhome/*',ensureAuthenticated, function (req, res, next) {
   req.app.locals.layout = 'layout_user'; // set User layout here
   if(!req.user.paid){
     req.app.locals.layout = 'layout'; // set User layout here
@@ -172,7 +172,7 @@ router.get('/userhome/ignite',function(req,res,next){
     if(err) throw err;
     //console.log(user);
     let week = user.week;
-    console.log(week);
+    //console.log(week);
     res.render('ignite',{weekcount:4,week:week});
   });
 });
@@ -184,33 +184,124 @@ router.get('/userhome/ignite/week:week',function(req,res,next){
     //console.log(user);
     let day = user.DayOrLevel;
     //console.log(day);
-    res.render('ignite',{day:day,week:user.week,weekcount:4});
+    res.render('ignite',{day:user.DayOrLevel,week:user.week,weekcount:4,daycount:5});
   });
 });
 
 router.get('/userhome/ignite/week:week/day:day/',function(req,res,next){
-  console.log("week"+req.params.week);
-  console.log("day"+req.params.day);
+  //console.log("week"+req.params.week);
+  //console.log("day"+req.params.day);
+  var title_id;
   //var query = {$and:[{week:{$regex: req.params.week, $options: 'i'}},{day:{$regex: req.params.day, $options: 'i'}}]}
-  //var query = {week:req.params.week,day:req.params.day};
+
   //var query = query.and([{ week: req.params.week }, { day: req.params.day }])
-  ignite.find({ $and: [ { week:parseInt(req.params.week) }, { Day:parseInt(req.params.day) } ] },'title id', function(err, user){
+  
+  ignite.find({ $and: [ { week:parseInt(req.params.week) }, { Day:parseInt(req.params.day) } ] },'title id').lean().exec(function(err, user){
     if(err) throw err;
-    console.log(user);
-    res.render('ignite',{user:user,weekcount:4,week:parseInt(req.params.week),day:parseInt(req.params.day)});
+    //console.log(user);
+    var query = {email:req.user.email};
+    UserStatus.findOne(query,function(err,user_data){
+      title_id = user_data.title_id;
+      res.render('ignite',{title_id:title_id,user:user,weekcount:4,daycount:5,week:user_data.week,day:user_data.DayOrLevel,url_day:parseInt(req.params.day),url_week:parseInt(req.params.week)});
+    });
   });
 });
 
-router.get('/userhome/ignite/week:week/day:day/video:video',function(req,res,next){
-  console.log("week"+req.params.week);
-  console.log("day"+req.params.day);
-  var video_count = parseInt(req.params.video);
-  ignite.find({ $and: [ { week:parseInt(req.params.week) }, { Day:parseInt(req.params.day) } ] },'title', function(err, data){
-    if(err) throw err;
-    console.log(data);
-    res.render('ignite',{data:data});
+router.get('/userhome/ignite/week:week/day:day/video:video',async function(req,res,next){
+  //console.log("week"+req.params.week);
+  //console.log("day"+req.params.day);
+  var query = {email:req.user.email};
+  //console.log(parseInt(req.params.video));
+  var video = parseInt(req.params.video);
+
+  let video_id,title,src,video_week,video_day;
+  let video_array = await UserStatus.find(query).lean().exec();
+  video_array.forEach(e=>{
+    video_id = e.title_id;
   });
-});
+  console.log("video_id"+video_id);
+  if(video==video_id){
+
+    var query = {id:video_id};
+    let data = await ignite.find(query,'title src').lean().exec();
+    data.forEach(e=>{
+      title = e.title;
+      src = e.src;
+    });
+    var query = {id:video_id+1};
+    let week_day_data = await ignite.find(query,'week Day').lean().exec();
+    week_day_data.forEach(e=>{
+      video_week = e.week;
+      video_day = e.Day;
+    });
+    if(video_week == parseInt(req.params.week)){
+      if(video_day != parseInt(req.params.day)){
+        new Promise((resolve, reject) => {
+          var query = {email:req.user.email};
+          //you update code here
+          UserStatus.findOneAndUpdate(
+            query,
+            {$set:{DayOrLevel : parseInt(req.params.day)+1}},
+            { new: true }
+          )
+            .then((result) => resolve())
+            .catch((err) => reject(err));
+        });
+      }
+    }
+    /*else{
+      new Promise((resolve, reject) => {
+        var query = {email:req.user.email};
+        //you update code here
+        UserStatus.findOneAndUpdate(
+          query,
+          {$set:{week : parseInt(req.params.week)+1}},
+          {$set:{DayOrLevel : 1}},
+          { new: true }
+        )
+          .then((result) => resolve())
+          .catch((err) => reject(err));
+      });
+    }*/
+    var query = {email:req.user.email};
+        new Promise((resolve, reject) => {
+        //you update code here
+        UserStatus.findOneAndUpdate(
+          query,
+          {$set:{title_id:video+1}},
+          { new: true }
+        )
+          .then((result) => resolve())
+          .catch((err) => reject(err));
+      });
+    //await UserStatus.findOneAndUpdate(query, {$set:{title_id:video+1}}, {useFindAndModify: false},{new: true}).exec();
+    res.render('video',{title:title,src:src,week:parseInt(req.params.week),day:parseInt(req.params.day),id:video});
+  }
+  else{
+    var query = {id:video};
+    let data = await ignite.find(query,'title src').lean().exec();
+    data.forEach(e=>{
+      title = e.title;
+      src = e.src;
+    });
+      res.render('video',{title:title,src:src,week:parseInt(req.params.week),day:parseInt(req.params.day),id:video});
+  }
+    /*if(video==video_id){
+      var query = {id:video};
+      await ignite.find(query,'title src').lean().exec(function(err, data){
+        if(err) throw err;
+        var query = {email:req.user.email};
+        UserStatus.findOneAndUpdate(query, {$set:{title_id:video+1}}, {useFindAndModify: false},{new: true}, (err, doc) => {
+          if (err) {
+              console.log("Something wrong when updating data!");
+          }
+          console.log("doc"+doc);
+          res.render('video',{data:data,week:parseInt(req.params.week),day:parseInt(req.params.day),id:video});
+        });
+      });
+    }*/
+    
+  });
 
 //kindle routes starts here.
 router.get('/userhome/kindle',function(req,res){
