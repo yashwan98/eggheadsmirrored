@@ -5,6 +5,11 @@ const passport = require('passport');
 
 // Bring in User Model
 let User = require('../models/user');
+mongoose.connect(config.database, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+let db = mongoose.connection;
 
 let counter = require('../models/counter');
 
