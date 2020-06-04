@@ -40,6 +40,14 @@ router.post('/course_change/:id', function (req, res) {
     //again displaying the user_data page with the UPDATED data
     dbo.collection("users").find({}).toArray(function (err, result) {
         if (err) throw err;
+        res.redirect('/admin/user_data');
+    });
+});
+
+router.get('/user_data', function(req, res) {
+    var dbo = db.useDb("eggheads");
+    dbo.collection("users").find({}).toArray(function (err, result) {
+        if (err) throw err;
         res.render('user_data', {
             results: result,
         });
@@ -58,11 +66,10 @@ router.post('/show_paid_user_data', function (req, res) {
         res.render('paid_user_data', {
             results: result,
         });
-        db.close();
     });
 });
 
-router.post('/login', function (req, res) {
+router.post('/user_data', function (req, res) {
     const adminEmail = req.body.adminEmail;
     const adminPassword = req.body.adminPassword;
     req.checkBody('adminEmail', 'Email is required').notEmpty();
