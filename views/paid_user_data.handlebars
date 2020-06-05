@@ -1,4 +1,4 @@
-<table class="table table-hover text-center">
+<table class="table table-bordered table-hover text-center container">
     <thead class="thead-dark">
         <tr>
             <th scope="col">S.No</th>
@@ -13,7 +13,7 @@
         {{#if results}}
         {{#each results }}
         <tr>
-            <th scope="row">1</th>
+            <th scope="row">{{inc @index}}</th>
             <td>{{firstName}}</td>
             <td>{{lastName}}</td>
             <td>{{email}}</td>
@@ -36,3 +36,8 @@
         {{/if}}
     </tbody>
 </table>
+<form action="/admin/not_paid_user_data" method="GET">
+    <div class="col text-center">
+        <button type="submit" class="btn btn-danger">NOT PAID USER DETAILS</button>
+    </div>
+</form>

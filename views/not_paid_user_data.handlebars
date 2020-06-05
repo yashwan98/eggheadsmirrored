@@ -1,0 +1,117 @@
+<table class="table table-bordered table-hover text-center container">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">S.No</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email Id</th>
+            <th scope="col">Course</th>
+            <th scope="col">Payment Status</th>
+            <th scope="col">Commit Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#if results}}
+            {{#each results }}
+            <tr>
+                <form action="/admin/course_change/{{_id}}" method="post">
+                    <th scope="row">1</th>
+                    <td>{{firstName}}</td>
+                    <td>{{lastName}}</td>
+                    <td>{{email}}</td>
+                    <td>
+                        {{#iff course '==' 'kindle'}}
+                            <div class="form-group">
+                                <select id="inputState" class="form-control p-2 bg-light font-weight-bold text-uppercase btn btn-light" name="courseChange">
+                                    <option selected>{{course}}</option>
+                                    <option value="ignite">ignite</option>
+                                </select>
+                            </div>
+                        {{else}}
+                            <div class="form-group">
+                                <select id="inputState" class="form-control p-2 bg-light font-weight-bold text-uppercase btn btn-light" name="courseChange">
+                                    <option selected>{{course}}</option>
+                                    <option value="kindle">kindle</option>
+                                </select>
+                            </div>
+                        {{/iff}}
+                    </td>
+                    <td>
+                        <div class="clickableList">
+                            <svg id="svgNC" class="NC bi bi-x-circle text-danger" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                            </svg>
+                            <svg id="svgC" class="bi bi-check-circle text-success" width="2em" height="2em"  style="display: none;" viewBox="0 0 16 16" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z" />
+                            </svg>
+                            <input type="hidden" id="checkPaidStatus" name="Paid" value=0>
+                        </div>
+                    </td>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                            COMMIT
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="exampleModalLongTitle">ALERT!</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="h4">Are you sure to make the changes?</p>
+                                        <p class="h4">Changes once made cannot be reverted back!</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
+                                        <button type="submit" class="btn btn-success">YES</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     {{!--    <div class="col">
+                            <button type="submit" style="background-color: #1a2e35;" class="btn btn-primary" onclick="alert('Are you sure to make the changes?')">COMMIT</button>
+                        </div> --}}
+                    </td>
+                </form>
+            </tr>
+            {{/each }}
+        {{/if}}        
+    </tbody>
+</table>
+<form action="/admin/paid_user_data" method="POST">
+    <div class="col text-center">
+        <button type="submit" class="btn btn-success">PAID USER DETAILS</button>
+    </div>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $('.clickableList').click(function (event) {
+        event.preventDefault();
+        var nc = $(this).find('#svgNC');
+        var c = $(this).find('#svgC');
+        nc.toggle();
+        c.toggle();
+        var v = c.is(":visible");
+        var checkPaidStatus = $(this).find('#checkPaidStatus');
+        if(v)
+        {
+            checkPaidStatus.val(1);
+        }
+        else
+        {
+            checkPaidStatus.val(0);
+        }
+    });
+</script>

@@ -149,7 +149,11 @@ app.use(expressValidator({
         "%": lvalue % rvalue
     }[operator];
 });
-  
+
+Handlebars.registerHelper("inc", function (value, options) {
+  return parseInt(value) + 1;
+});
+
 const users = require('./routes/users');
 
 app.use('/users', users);
