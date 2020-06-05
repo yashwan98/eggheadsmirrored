@@ -47,6 +47,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
   }));
+
 app.use('/static', express.static(path.join(__dirname, 'clients')))
 // app.use(express.static(path.join(__dirname,'clients')));
 
@@ -97,73 +98,80 @@ app.use(expressValidator({
         };
     }
 }));  
-  // Passport Config
-  require('./config/passport')(passport);
-  // Passport Middleware
-  app.use(passport.initialize());
-  app.use(passport.session());
 
-  Handlebars.registerHelper('times', function(n, block) {
-    var accum = '';
-    for(var i = 0; i < n; ++i)
-        accum += block.fn(i);
-    return accum;
-});
-  Handlebars.registerHelper('iff', function(a, operator, b, opts) {
-    var bool = false;
-    switch(operator) {
-      case '==':
-          bool = a == b;
-          break;
-      case '>':
-          bool = a > b;
-          break;
-      case '<':
-          bool = a < b;
-          break;
-      case '<=':
-          bool = a <= b;
-          break;
-      case '>=':
-          bool = a >= b;
-          break;
-      default:
-          throw "Unknown operator " + operator;
-    }
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-    if (bool) {
-        return opts.fn(this);
-    } else {
-        return opts.inverse(this);
-    }
-  });
-  Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
-    lvalue = parseFloat(lvalue);
-    rvalue = parseFloat(rvalue);
-        
-    return {
-        "+": lvalue + rvalue,
-        "-": lvalue - rvalue,
-        "*": lvalue * rvalue,
-        "/": lvalue / rvalue,
-        "%": lvalue % rvalue
-    }[operator];
+Handlebars.registerHelper('times', function(n, block) {
+  var accum = '';
+  for(var i = 0; i < n; ++i)
+      accum += block.fn(i);
+  return accum;
 });
 
+Handlebars.registerHelper('iff', function(a, operator, b, opts) {
+  var bool = false;
+  switch(operator) {
+    case '==':
+        bool = a == b;
+        break;
+    case '>':
+        bool = a > b;
+        break;
+    case '<':
+        bool = a < b;
+        break;
+    case '<=':
+        bool = a <= b;
+        break;
+    case '>=':
+        bool = a >= b;
+        break;
+    default:
+        throw "Unknown operator " + operator;
+  }
+
+  if (bool) {
+      return opts.fn(this);
+  } else {
+      return opts.inverse(this);
+  }
+});
+
+Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
+  lvalue = parseFloat(lvalue);
+  rvalue = parseFloat(rvalue);
+      
+  return {
+      "+": lvalue + rvalue,
+      "-": lvalue - rvalue,
+      "*": lvalue * rvalue,
+      "/": lvalue / rvalue,
+      "%": lvalue % rvalue
+  }[operator];
+});
+
+//used in not_paid_user_data and paid_user_data handelbars
 Handlebars.registerHelper("inc", function (value, options) {
   return parseInt(value) + 1;
 });
 
+//USER
 const users = require('./routes/users');
-
 app.use('/users', users);
 
+//ADMIN
 const admin = require('./routes/admin');
 app.use('/admin', admin);
 
+//port is set at 4000
 app.set('port', (process.env.PORT || 4000));
 
-app.get('/',(req,res,next)=>{
+//localhost:4000 hits as below
+app.get('/', (req, res, next) => {
   if(req.user){
     res.redirect('/users/userhome');
   }
@@ -173,5 +181,3 @@ app.get('/',(req,res,next)=>{
 });
 
 module.exports = { app };
-
-

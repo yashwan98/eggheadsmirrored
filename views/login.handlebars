@@ -30,7 +30,7 @@
                     {{/each }}
                 {{/if}}
             <form action="/users/login" method="post">
-                <div class="form-group" id="formGroup">
+                <div class="form-group " id="formGroup">
                 <!--<label for="exampleInputEmail1">Email address</label>-->
                 <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="E-mail" name="email">
                 <small id="emailHelp" class="form-text">We'll never share your email with anyone else.</small>
@@ -39,7 +39,6 @@
                 <!--<label for="exampleInputPassword1">Password</label>-->
                 <input type="password" class="form-control" placeholder="Password" name="password">
                 </div>
-                <div class="container">
                 <div class="row">
                     <div class="col text-left">
                         <div class="form-group form-check">
@@ -51,17 +50,14 @@
                     <a style="color: #1a2e35;" href="/forgotpassword">Forgot Password?</a></span>
                     </div>
                 </div>
-                </div>
                 
-                <div class="container">
                 <div class="row">
                     <div class="col text-left">
-                    <button type="submit" style="background-color: #1a2e35;" class="btn btn-primary">Get In</button>
+                        <button type="submit" style="background-color: #1a2e35;" class="btn btn-primary">Get In</button>
                     </div>
                     <div class="col text-right">
-                    <a href="/users/register" class="active" style="color: #1a2e35;"><i class="fa fa-user-plus"></i>Sign up</a>
+                        <a href="/users/register" class="active" style="color: #1a2e35;"><i class="fa fa-user-plus"></i>Sign up</a>
                     </div>
-                </div>
                 </div>
             </form>
             </div>
