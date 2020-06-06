@@ -205,39 +205,49 @@ router.get('/userhome/ignite/week:currentWeek', function(req, res, next) {
     let currentWeek = userStatus.week;
     let currentDay = userStatus.DayOrLevel;
     //console.log(day);
-    res.render('ignite', { 
-      currentDay: currentDay, 
-      currentWeek: currentWeek, 
-      weekCount:4, 
-      dayCount:5 
-    });
+    if(parseInt(req.params.currentWeek)>userStatus.week){
+      res.redirect('/users/userhome/ignite/week'+userStatus.week);
+    }
+    else{
+      res.render('ignite', { 
+        currentDay: currentDay, 
+        currentWeek: currentWeek, 
+        weekCount:4, 
+        dayCount:5 
+      });
+    }
   });
 });
 
-router.get('/userhome/ignite/week:currentWeek/day:clickedDay/', function(req, res, next) {
+router.get('/userhome/ignite/week:currentWeek/day:clickedDay/', async function(req, res, next) {
   //console.log("week"+req.params.week);
   //console.log("day"+req.params.day);
-  var currentTitle_id;
+  var currentTitle_id,data_length;
   //var query = {$and:[{week:{$regex: req.params.week, $options: 'i'}},{day:{$regex: req.params.day, $options: 'i'}}]}
-
   //var query = query.and([{ week: req.params.week }, { day: req.params.day }])
-  
+
   ignite.find({ $and: [{ week: parseInt(req.params.currentWeek) }, { Day: parseInt(req.params.clickedDay) } ] },'title id').lean().exec(function(err, titleAndIds) {
     if(err) throw err;
     //console.log(user);
+    console.log("data_length"+data_length);
     var query = {email: req.user.email};
     UserStatus.findOne(query, function(err, userStatus){
       currentTitle_id = userStatus.title_id;
-      res.render('ignite', {
-        currentTitle_id: currentTitle_id,
-        titleAndIds: titleAndIds,
-        weekCount: 4,
-        dayCount: 5,
-        currentWeek: userStatus.week,
-        currentDay: userStatus.DayOrLevel,
-        url_day: parseInt(req.params.currentWeek),
-        url_week: parseInt(req.params.clickedDay)
-      });
+      if(parseInt(req.params.clickedDay)>userStatus.DayOrLevel || parseInt(req.params.currentWeek)>userStatus.week){
+        res.redirect('/users/userhome/ignite/week'+userStatus.week+'/day'+userStatus.DayOrLevel);
+      }
+      else{
+        res.render('ignite', {
+          currentTitle_id: currentTitle_id,
+          titleAndIds: titleAndIds,
+          weekCount: 4,
+          dayCount: 5,
+          currentWeek: userStatus.week,
+          currentDay: userStatus.DayOrLevel,
+          url_week: parseInt(req.params.currentWeek),
+          url_day: parseInt(req.params.clickedDay)
+        });
+      }
     });
   });
 });
@@ -249,7 +259,7 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
   //console.log(parseInt(req.params.video));
   var video = parseInt(req.params.videoId);
 
-  let video_id,title,src,video_week,video_day,quiz;
+  let video_id,title,src,video_week,video_day,quiz,user_day,user_week;
   let video_array = await UserStatus.find(query).lean().exec();
   video_array.forEach(e => {
     video_id = e.title_id;
@@ -322,21 +332,32 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
     });
   }
   else{
-    var query = {id: video};
-    let data = await ignite.find(query,'title src quiz').lean().exec();
-    data.forEach(e=>{
-      title = e.title;
-      src = e.src;
-      quiz = e.quiz;
+    let video_array = await UserStatus.find(query).lean().exec();
+    video_array.forEach(e => {
+    video_id = e.title_id;
+    user_day = e.DayOrLevel;
+    user_week = e.week;
     });
-      res.render('video', {
-        title: title,
-        src: src,
-        week: parseInt(req.params.currentWeek),
-        day: parseInt(req.params.clickedDay),
-        id: video,
-        quiz: quiz
+    if(video>video_id){
+      res.redirect('/users/userhome/ignite/week'+user_week+'/day'+user_day+'/video'+video_id)
+    }
+    else{
+      var query = {id: video};
+      let data = await ignite.find(query,'title src quiz').lean().exec();
+      data.forEach(e=>{
+        title = e.title;
+        src = e.src;
+        quiz = e.quiz;
       });
+        res.render('video', {
+          title: title,
+          src: src,
+          week: parseInt(req.params.currentWeek),
+          day: parseInt(req.params.clickedDay),
+          id: video,
+          quiz: quiz
+        });
+      }
   }
     /*if(video==video_id){
       var query = {id:video};
@@ -352,7 +373,6 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
         });
       });
     }*/
-    
   });
 
 router.get('/userhome/ignite/week:week/day:day/video:id/quiz', function(req, res) {
