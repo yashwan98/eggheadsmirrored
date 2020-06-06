@@ -27,7 +27,15 @@ const UserStatusSchema = new Schema({
       type : Number,
       default : 1,
     },
-    quiz:{
+    quiz_attended:{
+      type : Number,
+      default : 0,
+    },
+    quiz_status:{
+      type : Number,
+      default : 0,
+    },
+    quiz_cummulative_score:{
       type : Number,
       default : 0,
     }
