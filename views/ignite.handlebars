@@ -9,7 +9,7 @@
           </li>
         {{else}}
           <li class="page-item disabled" id="Week-3">
-            <a class="page-link" href="/users/userhome/ignite/week{{ this }}" aria-disabled="true" onclick="tabPreview('Week',3);">Week {{ math this "+" 1 }}</a>
+            <a class="page-link" href="/users/userhome/ignite/week{{ math this "+" this }}" aria-disabled="true" onclick="tabPreview('Week',3);">Week {{ math this "+" 1 }}</a>
           </li>
         {{/iff }}
       <!--<li class="page-item disabled" id="Week-2"><a class="page-link" href="/users/userhome/ignite/week2" aria-disabled="true" onclick="tabPreview('Week',2);">Week 2</a></li>
@@ -76,6 +76,16 @@
         </div>
     {{/iff}}
     {{/each}}
+    {{#iff quiz '==' 1}}
+      <div class="row h-auto border 5px">
+
+        <div class="col-md-9 justify-content-center" id="title"> Take Quiz-{{ url_day }}</div>
+      
+        <div class="col-md-2 justify-content-center">
+          <a class="btn btn-primary disabled" href="/users/userhome/ignite/week{{ ../url_week }}/day{{ ../url_day }}/quiz{{ url_day }}" role="button">View</a>
+        </div>
+        </div>
+    {{/iff}}
 </div>
             
               <!--<div class="table-responsive">
