@@ -7,6 +7,7 @@ const passport = require('passport');
 let User = require('../models/user');
 let UserStatus = require('../models/userStatus');
 let ignite = require('../models/ignite');
+let quiz_model = require('../models/quiz');
 
 
 router.all('/userhome/*',ensureAuthenticated, function (req, res, next) {
@@ -213,10 +214,19 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/', async function(r
   //var query = {$and:[{week:{$regex: req.params.week, $options: 'i'}},{day:{$regex: req.params.day, $options: 'i'}}]}
   //var query = query.and([{ week: req.params.week }, { day: req.params.day }])
 
+  //get user current video id
+  var query = {email:req.user.email};
+
+  //check user video id in ignite and get quiz data
+  let quiz_data = await UserStatus.find(query,'quiz_status').lean().exec();
+  quiz_data.forEach(e => {
+    quiz = e.quiz_status;
+  });
+  console.log("quiz_status"+quiz);
+
   ignite.find({ $and: [{ week: parseInt(req.params.currentWeek) }, { Day: parseInt(req.params.clickedDay) } ] },'title id').lean().exec(function(err, titleAndIds) {
     if(err) throw err;
     //console.log(user);
-    console.log("data_length"+data_length);
     var query = {email: req.user.email};
     UserStatus.findOne(query, function(err, userStatus){
       currentTitle_id = userStatus.title_id;
@@ -232,7 +242,8 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/', async function(r
           currentWeek: userStatus.week,
           currentDay: userStatus.DayOrLevel,
           url_week: parseInt(req.params.currentWeek),
-          url_day: parseInt(req.params.clickedDay)
+          url_day: parseInt(req.params.clickedDay),
+          quiz : quiz
         });
       }
     });
@@ -275,12 +286,25 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
           //you update code here
           UserStatus.findOneAndUpdate(
             query,
-            { $set: { DayOrLevel: parseInt(req.params.clickedDay)+1}},
+            { $set: { quiz_status: 1}},
             { new: true }
           )
             .then((result) => resolve())
             .catch((err) => reject(err));
         });
+      }
+      else{
+        var query = {email: req.user.email};
+        new Promise((resolve, reject) => {
+        //you update code here
+        UserStatus.findOneAndUpdate(
+          query,
+          {$set:{title_id: video+1}},
+          { new: true }
+        )
+          .then((result) => resolve())
+          .catch((err) => reject(err));
+      });
       }
     }
     /*else{
@@ -297,17 +321,6 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
           .catch((err) => reject(err));
       });
     }*/
-    var query = {email: req.user.email};
-        new Promise((resolve, reject) => {
-        //you update code here
-        UserStatus.findOneAndUpdate(
-          query,
-          {$set:{title_id: video+1}},
-          { new: true }
-        )
-          .then((result) => resolve())
-          .catch((err) => reject(err));
-      });
     //await UserStatus.findOneAndUpdate(query, {$set:{title_id:video+1}}, {useFindAndModify: false},{new: true}).exec();
     res.render('video', {
       title: title,
@@ -330,17 +343,19 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
     }
     else{
       var query = {id: video};
-      let data = await ignite.find(query,'title src quiz').lean().exec();
+      let data = await ignite.find(query,'title src quiz week Day').lean().exec();
       data.forEach(e=>{
         title = e.title;
         src = e.src;
         quiz = e.quiz;
+        video_week = e.week;
+        video_day = e.Day;
       });
         res.render('video', {
           title: title,
           src: src,
-          week: parseInt(req.params.currentWeek),
-          day: parseInt(req.params.clickedDay),
+          week: video_week,
+          day: video_day,
           id: video,
           quiz: quiz
         });
@@ -362,8 +377,28 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
     }*/
   });
 
-router.get('/userhome/ignite/week:week/day:day/video:id/quiz', function(req, res) {
-  res.render('quiz');
+router.get('/userhome/ignite/week:currentWeek/day:clickedDay/quiz:currentQuiz', async function(req, res,next) {
+  //db.users.update({ userId:89 }, { $inc : { "subjectResults.attempts" : 1, "subjectResults.total_time" : 10, "subjectResults.total_score" : 100 } })
+  //you update code here
+  var query = {email: req.user.email},user_day,user_week;
+  let user_quiz_data = await UserStatus.find(query,'week DayOrLevel').lean().exec();
+  user_quiz_data.forEach(e => {
+    user_week = e.week;
+    user_day = e.DayOrLevel;
+  });
+  let quiz_data = await quiz_model.find({ $and: [{ week: user_week }, { day: user_day } ] }).lean().exec();
+  /*var query = {email: req.user.email};
+      new Promise((resolve, reject) => {
+      //you update code here
+      UserStatus.findOneAndUpdate(
+        query,
+        {$inc:{title_id: 1,DayOrLevel:1}},
+        { new: true }
+      )
+        .then((result) => resolve())
+        .catch((err) => reject(err));
+    });*/
+  res.render('quiz',{quiz_data : quiz_data,day:parseInt(req.params.currentWeek)});
 });
 
 //kindle routes starts here.

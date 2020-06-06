@@ -78,11 +78,11 @@
     {{/each}}
     {{#iff quiz '==' 1}}
       <div class="row h-auto border 5px">
-
+        <div class="col-md-9 justify-content-center"><b>Quiz</b></div>
         <div class="col-md-9 justify-content-center" id="title"> Take Quiz-{{ url_day }}</div>
       
         <div class="col-md-2 justify-content-center">
-          <a class="btn btn-primary disabled" href="/users/userhome/ignite/week{{ ../url_week }}/day{{ ../url_day }}/quiz{{ url_day }}" role="button">View</a>
+          <a class="btn btn-primary" href="/users/userhome/ignite/week{{ url_week }}/day{{ url_day }}/quiz{{ url_day }}" role="button">View</a>
         </div>
         </div>
     {{/iff}}
