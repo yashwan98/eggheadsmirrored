@@ -16,6 +16,9 @@
             <span aria-hidden="true">&times;</span>
         </button>-->
         <div class="modal-body">
+            {{#if error_msg}}
+            <div class="alert alert-danger text-center">{{ error_msg }}</div>
+            {{/if}}
             {{#if errors}}
                 {{#each errors }}
                     <div class="alert alert-danger">{{msg}}</div>

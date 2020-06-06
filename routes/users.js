@@ -30,57 +30,70 @@ router.get('/register',function(req,res){
 });
 
 router.post('/register', function(req, res){
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const email = req.body.email;
-  const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
-  const course = req.body.course;
+
+  var query = {email: req.body.email};
   
-  //console.log(course);
+  User.find(query, function(err, doc){
+    if(doc.length !== 0)
+    {
+      req.flash('error_msg', 'Email Id already exist !!!');
+      res.redirect('/users/register');
+    }
+    else{
+      const firstName = req.body.firstName;
+      const lastName = req.body.lastName;
+      const email = req.body.email;
+      const password = req.body.password;
+      const confirmPassword = req.body.confirmPassword;
+      const course = req.body.course;
 
-  req.checkBody('firstName', 'firstname is required').notEmpty();
-  req.checkBody('lastName', 'lastname is required').notEmpty();
-  req.checkBody('email', 'Email is required').notEmpty();
-  req.checkBody('email', 'Email is not valid').isEmail();
-  req.checkBody('password', 'Password is required').notEmpty();
-  req.checkBody('course', 'select course').isIn(['ignite','kindle']);
-  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
+      req.checkBody('firstName', 'firstname is required').notEmpty();
+      req.checkBody('lastName', 'lastname is required').notEmpty();
+      req.checkBody('email', 'Email is required').notEmpty();
+      req.checkBody('email', 'Email is not valid').isEmail();
+      req.checkBody('password', 'Password is required').notEmpty();
+      req.checkBody('course', 'select course').isIn(['ignite', 'kindle']);
+      req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-  let errors = req.validationErrors();
+      let errors = req.validationErrors();
 
-  if(errors){
-    console.log(errors);
-    res.render('register',{
-      errors:errors,
-    });
-  } else {
-    let newUser = new User({
-      firstName:firstName,
-      lastName : lastName,
-      email:email,
-      password:password,
-      course:course,
-    });
-
-    bcrypt.genSalt(10, function(err, salt){
-      bcrypt.hash(newUser.password, salt, function(err, hash){
-        if(err){
-          console.log(err);
-        }
-        newUser.password = hash;
-        newUser.save(function(err){
-          if(err){
-            console.log(err);
-            return;
-          } else {
-            req.flash('success_msg','You are now registered and can log in');
-            res.redirect('/users/login');
-          }
+      if (errors) {
+        console.log(errors);
+        res.render('register', {
+          errors: errors,
         });
-      });
-    });
-  }
+      } else {
+
+        let newUser = new User({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          course: course,
+        });
+
+        bcrypt.genSalt(10, function (err, salt) {
+          bcrypt.hash(newUser.password, salt, function (err, hash) {
+            if (err) {
+              console.log(err);
+            }
+            newUser.password = hash;
+            newUser.save(function (err) {
+              if (err) {
+                console.log(err);
+                return;
+              } else {
+                req.flash('success_msg', 'You are now registered and can log in');
+                res.redirect('/users/login');
+              }
+            });
+          });
+        });
+      }
+    }
+  });
+    /* req.flash('error_msg', 'Email Id already exist !!!');
+    res.redirect('/users/register'); */
 });
 
 router.get('/login',function(req,res){
