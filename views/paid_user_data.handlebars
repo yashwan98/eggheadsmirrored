@@ -2,26 +2,26 @@
     <thead class="thead-dark">
         <tr>
             <th scope="col">S.No</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
+            <th scope="col">Name of student</th>
             <th scope="col">Email Id</th>
             <th scope="col">Course</th>
+            <th scope="col">Week</th>
             <th scope="col">Paid</th>
         </tr>
     </thead>
     <tbody>
         {{#if results}}
-        {{#each results }}
+        {{#each results}}
         <tr>
             <th scope="row">{{inc @index}}</th>
-            <td>{{firstName}}</td>
-            <td>{{lastName}}</td>
+            <td>{{Name}}</td>
             <td>{{email}}</td>
             <td>
                 <div class="p-1 bg-light font-weight-bold text-center text-uppercase">
                     {{course}}
                 </div>
             </td>
+            <td>{{week}}</td>
             <td>
                 <svg class="bi bi-check-circle text-success" width="2em" height="2em" viewBox="0 0 16 16"
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -32,12 +32,32 @@
                 </svg>
             </td>
         </tr>
-        {{/each }}
+        {{/each}}
         {{/if}}
     </tbody>
 </table>
-<form action="/admin/not_paid_user_data" method="GET">
-    <div class="col text-center">
-        <button type="submit" class="btn btn-danger">NOT PAID USER DETAILS</button>
+
+<div class="row">
+    <div class="text-left">
+    <form action="/admin/not_paid_user_data" method="GET">
+        <div class="col">
+            <button type="submit" class="btn btn-danger">NOT PAID USER DETAILS</button>
+        </div>
+    </form>
     </div>
-</form>
+    <div class="text-right">
+    <form action="/admin/change_week_for_all_students" method="POST">
+        <div class="form-row">
+            <select id="inputState" class="btn btn-light" name="weekChange">
+                <option value=1>week 1</option>
+                <option value=2>week 2</option>
+                <option value=3>week 3</option>
+                <option value=4>week 4</option>
+            </select>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">CHANGE WEEK</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>

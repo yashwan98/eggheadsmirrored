@@ -146,7 +146,7 @@ router.get('/payment', ensureAuthenticated, function(req,res,next){
       if(err) throw err;
       if(!userStatus){
             let newUserStatus = new UserStatus({
-              Name: req.user.firstName + req.user.lastName,
+              Name: req.user.firstName + ' ' + req.user.lastName,
               email: req.user.email,
               course: req.user.course,
             });
@@ -172,7 +172,8 @@ router.get('/userhome', ensureAuthenticated, function(req,res,next){
   if(req.user.paid){
     res.render('user_home', {
       layout:'layout_user', 
-      course: req.user.course
+      course: req.user.course,
+      name: req.user.firstName + ' ' + req.user.lastName
     });
   }
   else{
@@ -375,7 +376,7 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
     }*/
   });
 
-router.get('/userhome/ignite/week:week/day:day/video:id/quiz', function(req, res) {
+router.get('/userhome/ignite/week:week/day:day/quiz', function(req, res) {
   res.render('quiz');
 });
 
