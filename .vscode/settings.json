@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/019a333c-e5ff-419d-b340-0b2550cc010d/resourceGroups/cloud-shell-storage-centralindia/providers/Microsoft.Web/sites/EggHeads",
+    "appService.deploySubpath": "."
+}

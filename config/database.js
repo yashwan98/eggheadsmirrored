@@ -1,5 +1,4 @@
 
 module.exports = {
-    database:'mongodb://localhost:27017/eggheads',
-    secret: 'yoursecret'
+  database: 'mongodb+srv://eggheads:Rjpd@2419@cluster0-2c7zc.mongodb.net/eggheadsIgnite?retryWrites=true&w=majority'
   }
