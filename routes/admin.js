@@ -72,7 +72,7 @@ router.post('/change_week_for_all_students', function (req, res) {
     var dbo = db.useDb("eggheads");
     var Week = parseInt(req.body.weekChange)
     var query ={};
-    var newWeek = { $set: {week: Week, quiz_attended: 0, quiz_status: 0} };
+    var newWeek = { $inc: { title_id: 1}, $set: { week: Week, DayOrLevel:1, quiz_attended: 0, quiz_status: 0} };
 
     dbo.collection("userstatuses").updateMany(query, newWeek, function(err, res) {
             if (err) throw err;
