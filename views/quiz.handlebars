@@ -7,28 +7,52 @@
     <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
 </div>-->
 <div class="container">
+    {{#if error_msg}}
+        <div class="h4 alert alert-danger text-center">{{ error_msg }}</div>
+    {{/if}}
     <h1 class="display-4 text-center">QUIZ {{ day }}</h1>
-    {{#each quiz_data }}
-    <form action="/users/userhome/ignite/week:{{../currentWeek}}/day{{../currentDay }}/quiz" method="post"></form>
-    <div class="form-check">
-        <h1 class="display">{{ this.id }}.{{ this.question }}</h1></br>
-        <input class="form-check-input" type="radio" name="{{ }}" id="exampleRadios1" value="{{ this.A}}">
-        <label class="form-check-label" for="exampleRadios1">
-            {{ this.A }}
-        </label></br>
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="{{ this.B }}">
-        <label class="form-check-label" for="exampleRadios1">
-            {{ this.B }}
-        </label></br>
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="{{ this.C }}">
-        <label class="form-check-label" for="exampleRadios1">
-            {{ this.C }}
-        </label></br>
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="{{ this.D }}">
-        <label class="form-check-label" for="exampleRadios1">
-            {{ this.D }}
-        </label></br><hr>
-    </div>
+    <p class="lead text-center">NOTE: Minimum 60% score is required to unlock the next course</p>
+    <form  id="myForm" action="/users/userhome/ignite/week{{currentWeek}}/day{{currentDay}}/quiz" method="post">
+        {{#each quiz_data }}
+            <h1 class="display">{{ this.id }}. {{ this.question }}</h1></br>
+            <div class="container">
+                <input class="form-check-input" id="radioID" type="radio" name="ans{{ this.id }}" value="A">
+                <label class="form-check-label" for="exampleRadios1">
+                    <p class="h5">{{ this.A }}</p>
+                </label></br>
+                <input class="form-check-input" id="radioID" type="radio" name="ans{{ this.id }}" value="B">
+                <label class="form-check-label" for="exampleRadios1">
+                    <p class="h5">{{ this.B }}</p>
+                </label></br>
+                <input class="form-check-input" id="radioID" type="radio" name="ans{{ this.id }}" value="C">
+                <label class="form-check-label" for="exampleRadios1">
+                    <p class="h5">{{ this.C }}</p>
+                </label></br>
+                <input class="form-check-input" id="radioID" type="radio" name="ans{{ this.id }}" value="D">
+                <label class="form-check-label" for="exampleRadios1">
+                    <p class="h5">{{ this.D }}</p>
+                </label></br><hr>
+            </div>
+        {{/each}}
+        <div class="col text-center">
+            <button type="submit" id="sub" style="background-color: #1a2e35;" class="btn btn-primary" disabled>Submit</button>
+        </div>
     <form>
-    {{/each}}
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(":radio").change(function () {
+        var names = {};
+        $(':radio').each(function () {
+            names[$(this).attr('name')] = true;
+        });
+        var count = 0;
+        $.each(names, function () {
+            count++;
+        });
+        var submitBtn = $(this).find('#sub');
+        if ($(':radio:checked').length === count) {
+            $(':input[type="submit"]').prop('disabled', false);
+        }
+    }).change();
+</script>

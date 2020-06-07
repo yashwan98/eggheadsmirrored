@@ -391,10 +391,6 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/video:videoId', asy
     }*/
   });
 
-<<<<<<< HEAD
-router.get('/userhome/ignite/week:week/day:day/quiz', function(req, res) {
-  res.render('quiz');
-=======
 router.get('/userhome/ignite/week:currentWeek/day:clickedDay/quiz:currentQuiz', async function(req, res,next) {
   //db.users.update({ userId:89 }, { $inc : { "subjectResults.attempts" : 1, "subjectResults.total_time" : 10, "subjectResults.total_score" : 100 } })
   //you update code here
@@ -404,6 +400,7 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/quiz:currentQuiz', 
     user_week = e.week;
     user_day = e.DayOrLevel;
   });
+  
   let quiz_data = await quiz_model.find({ $and: [{ week: user_week }, { day: user_day } ] }).lean().exec();
   /*var query = {email: req.user.email};
       new Promise((resolve, reject) => {
@@ -416,8 +413,70 @@ router.get('/userhome/ignite/week:currentWeek/day:clickedDay/quiz:currentQuiz', 
         .then((result) => resolve())
         .catch((err) => reject(err));
     });*/
-  res.render('quiz',{quiz_data : quiz_data,day:parseInt(req.params.currentWeek)});
->>>>>>> 9f2edd484631137ecbe75b71087d11d887bc80c1
+  res.render('quiz',{
+    quiz_data : quiz_data, 
+    currentWeek:parseInt(req.params.currentWeek),
+    currentDay: parseInt(req.params.currentDay)
+  });
+});
+
+//AFTER SUBMITTING THE QUIZ
+router.post('/userhome/ignite/week:currentWeek/day:currentDay/quiz', async function(req, res){
+  console.log("I am in quiz post router");
+  var query = { email: req.user.email }, user_day, user_week, score=0;
+
+  //fetching the week and dayorlevel of student from userstatus DB
+  let user_quiz_data = await UserStatus.find(query, 'week DayOrLevel').lean().exec();
+  user_quiz_data.forEach(e => {
+    user_week = e.week;
+    user_day = e.DayOrLevel;
+  });
+  
+  //fetching the correct answers from quiz DB
+  let quiz_data = await quiz_model.find({ $and: [{ week: user_week }, { day: user_day }] }, 'correct').lean().exec();
+  console.log(quiz_data);
+  
+  //req.body contains the submitted answer by the student
+  console.log(req.body);
+  var submittedData = req.body;
+
+  //checks the submitted answers with the correct answers and score is given
+  for(var i=1; i<=2; i++)
+  {
+    if(quiz_data[i-1].correct === submittedData[`ans${i}`])
+      score += 10;
+  }
+  console.log(score);
+
+  //if score is >= 60 next day is revealed, else student should retake the quiz
+  if(score >= 20)
+  {
+    query = { $inc: { title_id: 1, DayOrLevel:1, quiz_attended: 1, quiz_status: -1, quiz_cumulative_score: score} }
+    
+    UserStatus.find({email: req.user.email}, function(err, result){
+      if(err) throw err;
+      UserStatus.updateOne(query, function(err, result){
+        console.log(result);
+      });
+    
+      UserStatus.find({ email: req.user.email }, function(err, result){
+        var user_data = result[0];
+        res.redirect(`/users/userhome/ignite/week${user_data.week}/day${user_data.DayOrLevel}`);
+      });
+    
+    });
+  }
+  else{
+    
+    let quiz_data = await quiz_model.find({ $and: [{ week: user_week }, { day: user_day }] }).lean().exec();
+    res.render('quiz', {
+      quiz_data: quiz_data,
+      currentWeek: parseInt(req.params.currentWeek),
+      currentDay: parseInt(req.params.currentDay),
+      error_msg: "Your score is less than 60%, Please retake to pass the quiz"
+    });
+  }
+
 });
 
 //kindle routes starts here.

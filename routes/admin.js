@@ -61,6 +61,7 @@ router.post('/paid_user_data', function (req, res) {
 
     dbo.collection("userstatuses").find({}).toArray(function (err, result) {
         if (err) throw err;
+        console.log(result);
         res.render('paid_user_data', {
             results: result,
         });
@@ -71,7 +72,7 @@ router.post('/change_week_for_all_students', function (req, res) {
     var dbo = db.useDb("eggheads");
     var Week = parseInt(req.body.weekChange)
     var query ={};
-    var newWeek = { $set: {week: Week} };
+    var newWeek = { $set: {week: Week, quiz_attended: 0, quiz_status: 0} };
 
     dbo.collection("userstatuses").updateMany(query, newWeek, function(err, res) {
             if (err) throw err;

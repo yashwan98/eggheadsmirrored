@@ -6,6 +6,7 @@
             <th scope="col">Email Id</th>
             <th scope="col">Course</th>
             <th scope="col">Week</th>
+            <th scopr="col">Cumulative Score</th>
             <th scope="col">Paid</th>
         </tr>
     </thead>
@@ -21,7 +22,16 @@
                     {{course}}
                 </div>
             </td>
-            <td>{{week}}</td>
+            <td>
+                <div class="p-1 bg-light font-weight-bold text-center text-uppercase">
+                    {{week}}
+                </div>
+            </td>
+            <td>
+                <div class="p-1 bg-light font-weight-bold text-center text-uppercase">
+                    {{quiz_cumulative_score}}
+                </div>
+            </td>
             <td>
                 <svg class="bi bi-check-circle text-success" width="2em" height="2em" viewBox="0 0 16 16"
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
