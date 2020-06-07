@@ -24,8 +24,8 @@ router.post('/course_change/:id', function (req, res) {
     var courseChange = req.body.courseChange;
     var Paid = parseInt(req.body.Paid);
 
-    //asking to use the 'eggheads' database
-    var dbo = db.useDb("eggheads");
+    //asking to use the 'eggheadsIgnite' database
+    var dbo = db.useDb("eggheadsIgnite");
 
     //converting the user's ID to ObjectID and creating a query object
     var myquery = { _id:  ObjectID(id)};
@@ -46,7 +46,7 @@ router.post('/course_change/:id', function (req, res) {
 });
 
 router.get('/not_paid_user_data', function(req, res) {
-    var dbo = db.useDb("eggheads");
+    var dbo = db.useDb("eggheadsIgnite");
     var query = {paid: 0};
     dbo.collection("users").find(query).toArray(function (err, result) {
         if (err) throw err;
@@ -57,7 +57,7 @@ router.get('/not_paid_user_data', function(req, res) {
 });
 
 router.post('/paid_user_data', function (req, res) {
-    var dbo = db.useDb("eggheads");
+    var dbo = db.useDb("eggheadsIgnite");
 
     dbo.collection("userstatuses").find({}).toArray(function (err, result) {
         if (err) throw err;
@@ -69,7 +69,7 @@ router.post('/paid_user_data', function (req, res) {
 });
 
 router.post('/change_week_for_all_students', function (req, res) {
-    var dbo = db.useDb("eggheads");
+    var dbo = db.useDb("eggheadsIgnite");
     var Week = parseInt(req.body.weekChange)
     var query ={};
     var newWeek = { $inc: { title_id: 1}, $set: { week: Week, DayOrLevel:1, quiz_attended: 0, quiz_status: 0} };
@@ -105,7 +105,7 @@ router.post('/not_paid_user_data', function (req, res) {
     else {
         if (adminEmail === 'EggHeads_@outlook.com' && adminPassword === 'breaksomeeggs'){
             req.flash('success_msg', 'You are Authorized');
-            var dbo = db.useDb("eggheads");
+            var dbo = db.useDb("eggheadsIgnite");
             var query = { paid: 0 };
             dbo.collection("users").find(query).toArray(function (err, result) {
                 if (err) throw err;
